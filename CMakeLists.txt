@@ -1,9 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 
-if(NOT DEFINED CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
-endif()
-
 project(libwebsockets C)
 
 set(PACKAGE "libwebsockets")

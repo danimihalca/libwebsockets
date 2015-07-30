@@ -312,7 +312,7 @@ libwebsockets_get_addresses(struct libwebsocket_context *context,
 			    void *ads, char *name, int name_len,
 			    char *rip, int rip_len)
 {
-	struct addrinfo ai, *res;
+	struct addrinfo ai, *res, *res0;
 	void *p = NULL;
 
 	rip[0] = '\0';
@@ -350,9 +350,10 @@ libwebsockets_get_addresses(struct libwebsocket_context *context,
 		if (!rip)
 			return 0;
 
-		if (getaddrinfo(name, NULL, &ai, &res))
+		if (getaddrinfo(name, NULL, &ai, &res0))
 			return -1;
 
+		res = res0;
 		while (!p && res) {
 			switch (res->ai_family) {
 			case AF_INET:
@@ -365,10 +366,12 @@ libwebsockets_get_addresses(struct libwebsocket_context *context,
 	}
 
 	if (!p)
+	{
+		freeaddrinfo(res0);
 		return -1;
-
+	}
 	lws_plat_inet_ntop(AF_INET, p, rip, rip_len);
-
+	freeaddrinfo(res0);
 	return 0;
 }
 
