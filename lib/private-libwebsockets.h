@@ -70,8 +70,16 @@
 #ifdef HAVE_IN6ADDR_H
 #include <in6addr.h>
 #endif
+#ifdef WINAPI_FAMILY_PHONE_APP
+struct tcp_keepalive {
+	ULONG onoff;
+	ULONG keepalivetime;
+	ULONG keepaliveinterval;
+};
+#define SIO_KEEPALIVE_VALS  _WSAIOW(IOC_VENDOR,4)
+#else
 #include <mstcpip.h>
-
+#endif
 #ifndef __func__
 #define __func__ __FUNCTION__
 #endif
